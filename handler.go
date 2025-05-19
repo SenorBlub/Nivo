@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-// Common structure to respond with simple JSON.
+// Common structure to respond with simple JSON
 func respondJSON(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(data)
@@ -100,25 +100,23 @@ func documentHandler(w http.ResponseWriter, r *http.Request) {
 		Prompt     string `json:"prompt"`
 	}
 	fmt.Println("handler reached")
+	if input.Collection == "" {
+		input.Collection = "Memory"
+	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil || input.Prompt == "" {
 		http.Error(w, "Invalid JSON or missing 'prompt' field", http.StatusBadRequest)
 		return
 	}
 
-	// Set default collection if not provided.
-	if input.Collection == "" {
-		input.Collection = "Memory"
-	}
-
-	// Phase 1: Plan the documentation.
+	// Phase 1: Plan the documentation
 	plan, err := ThinkDocumentation(input.Prompt)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Planning failed: %v", err), http.StatusInternalServerError)
 		return
 	}
 
-	// Phase 2: Generate the documentation.
+	// Phase 2: Generate the documentation
 	output, err := TalkDocumentation(plan)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Generation failed: %v", err), http.StatusInternalServerError)
@@ -137,14 +135,13 @@ func thinkHandler(w http.ResponseWriter, r *http.Request) {
 		Prompt     string `json:"prompt"`
 	}
 	fmt.Println("handler reached")
+	if input.Collection == "" {
+		input.Collection = "Memory"
+	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil || input.Prompt == "" {
 		http.Error(w, "Invalid JSON or missing 'prompt' field", http.StatusBadRequest)
 		return
-	}
-	// Set default collection if not provided.
-	if input.Collection == "" {
-		input.Collection = "Memory"
 	}
 
 	response, err := Think(input.Prompt)
@@ -164,14 +161,13 @@ func explainHandler(w http.ResponseWriter, r *http.Request) {
 		Prompt     string `json:"prompt"`
 	}
 	fmt.Println("handler reached")
+	if input.Collection == "" {
+		input.Collection = "Memory"
+	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil || input.Prompt == "" {
 		http.Error(w, "Invalid JSON or missing 'prompt' field", http.StatusBadRequest)
 		return
-	}
-	// Set default collection if not provided.
-	if input.Collection == "" {
-		input.Collection = "Memory"
 	}
 
 	response, err := Talk(input.Prompt)
@@ -200,12 +196,12 @@ func rememberHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Missing 'text' or 'subject'", http.StatusBadRequest)
 		return
 	}
-	// Set default collection if not provided.
+
 	if input.Collection == "" {
 		input.Collection = "Memory"
 	}
 
-	// Build chunk data to send to Chisel `/chunk`.
+	// Build chunk data to send to Chisel `/chunk`
 	payload := map[string]interface{}{
 		"text":       input.Text,
 		"origin":     input.Origin,
@@ -241,11 +237,6 @@ func askHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil || input.Query == "" {
 		http.Error(w, "Invalid JSON or missing 'query'", http.StatusBadRequest)
 		return
-	}
-
-	// Set default collection if not provided.
-	if input.Collection == "" {
-		input.Collection = "Memory"
 	}
 
 	answer, err := Ask(input.Query, input.Collection)

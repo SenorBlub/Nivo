@@ -34,7 +34,7 @@ func postToChiselChunk(text, origin, collection string) ([]byte, error) {
 		"origin":     origin,
 		"collection": collection,
 	}
-	return postJSON("http://localhost:8080/chunk", payload)
+	return postJSON(ChiselIp+"/chunk", payload)
 }
 
 func callGlintView(image, origin, name string) (string, error) {
@@ -43,7 +43,7 @@ func callGlintView(image, origin, name string) (string, error) {
 		"origin": origin,
 		"name":   name,
 	}
-	data, err := postJSON("http://localhost:8060/view", payload)
+	data, err := postJSON(GlintIp+"/view", payload)
 	if err != nil {
 		return "", err
 	}
@@ -57,7 +57,7 @@ func callResonoListen(audio, origin, name string) (string, error) {
 		"name":   name,
 	}
 
-	data, err := postJSON("http://localhost:8040/transcribe", payload)
+	data, err := postJSON(ResonoIp+"/transcribe", payload)
 	if err != nil {
 		return "", err
 	}

@@ -4,7 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
+
+var ChiselIp = os.Getenv("CHISEL_IP")
+var GlintIp = os.Getenv("GLINT_IP")
+var ResonoIp = os.Getenv("RESONO_IP")
 
 func enableCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +39,6 @@ func main() {
 	http.HandleFunc("/remember", enableCORS(rememberHandler))
 	http.HandleFunc("/ask", enableCORS(askHandler))
 
-	fmt.Println("🤖 Nivo API running on http://localhost:8090")
+	fmt.Println("🤖 Nivo API running on port 8090")
 	log.Fatal(http.ListenAndServe(":8090", nil))
 }

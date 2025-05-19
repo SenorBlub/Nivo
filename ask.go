@@ -20,7 +20,7 @@ func Ask(query, collection string) (string, error) {
 		"collection": collection,
 	}
 	lookupBody, _ := json.Marshal(lookupPayload)
-	lookupResp, err := http.Post("http://localhost:8080/lookup", "application/json", bytes.NewBuffer(lookupBody))
+	lookupResp, err := http.Post(ChiselIp+"/lookup", "application/json", bytes.NewBuffer(lookupBody))
 	if err != nil {
 		return "", fmt.Errorf("failed to lookup context: %w", err)
 	}
